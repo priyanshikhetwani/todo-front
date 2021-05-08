@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TodoItem } from "./TodoItem";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getTodosAsync } from "../redux/todoSlice";
 
 export const Todos = (props) => {
   const todos = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getTodosAsync());
+  }, [dispatch]);
 
   let todostyles = {
     minHeight: "85vh",

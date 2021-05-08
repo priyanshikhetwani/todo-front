@@ -1,4 +1,34 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+export const getTodosAsync = createAsyncThunk(
+  "todos/getTodosAsync",
+  async () => {
+    console.log("in thunk");
+    const response = await fetch("http://127.0.0.1:3333/todo");
+    if (response.ok) {
+      const todos = await response.json();
+      return { todos };
+    }
+  }
+);
+
+export const addTodosAsync = createAsyncThunk(
+  "todos/addTodosAsync",
+  async (payload) => {
+    const response = await fetch("http://127.0.0.1:3333/todo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title: payload.title }),
+    });
+
+    if (response.ok) {
+      const todo = await response.json();
+      return { todo };
+    }
+  }
+);
 
 const todoSlice = createSlice({
   name: "todos",
@@ -36,6 +66,19 @@ const todoSlice = createSlice({
     },
     deleteTodo: (state, action) => {
       return state.filter((todo) => todo.id !== action.payload.id);
+    },
+  },
+
+  extraReducers: {
+    [getTodosAsync.pending]: (state, action) => {
+      console.log("fetching data");
+    },
+    [getTodosAsync.fulfilled]: (state, action) => {
+      console.log("fetched data");
+      return action.payload.todos;
+    },
+    [addTodosAsync.fulfilled]: (state, action) => {
+      state.push(action.payload.todo);
     },
   },
 });

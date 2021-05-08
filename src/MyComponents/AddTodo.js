@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addTodo } from "../redux/todoSlice";
+import { addTodosAsync } from "../redux/todoSlice";
 
 export const AddTodo = () => {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState();
 
   const dispatch = useDispatch();
   // const [desc, setDesc] = useState("");
@@ -14,7 +14,7 @@ export const AddTodo = () => {
       alert("Title can not be blank.");
     } else {
       dispatch(
-        addTodo({
+        addTodosAsync({
           title: title,
         })
       );
