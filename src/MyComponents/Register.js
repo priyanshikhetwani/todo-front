@@ -27,6 +27,7 @@ export const Register = () => {
       .post("register", data)
       .then((res) => {
         console.log(res);
+        history.push("/login");
       })
       .catch((err) => {
         console.log(err);

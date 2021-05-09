@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Component } from "react";
 import Header from "./MyComponents/Header";
 import { Footer } from "./MyComponents/Footer";
 import { Todos } from "./MyComponents/Todos";
@@ -8,26 +8,47 @@ import { About } from "./MyComponents/About";
 import { Login } from "./MyComponents/Login";
 import { Register } from "./MyComponents/Register";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import axios from "axios";
 
-function App() {
-  let initTodo;
-  if (localStorage.getItem("todos") === null) {
-    initTodo = [];
-  } else {
-    initTodo = JSON.parse(localStorage.getItem("todos"));
+export default class App extends Component {
+  state = {
+    // loggedIn: false,
+    // user: "",
+  };
+
+  componentDidMount() {
+    axios.get("user").then(
+      (res) => {
+        console.log("token passed");
+        this.setState({
+          user: res.data,
+        });
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
-  const onDelete = (todo) => {
-    // console.log("I am onDelete", todo)
-    // let index = todos.indexOf(todos);
-    // todos.splice(index, 1);
-    setTodos(
-      todos.filter((e) => {
-        return e !== todo;
-      })
-    );
-    localStorage.setItem("todos", JSON.stringify(todos));
-  };
+  // let initTodo;
+  // if (localStorage.getItem("todos") === null) {
+  //   initTodo = [];
+  // } else {
+  //   initTodo = JSON.parse(localStorage.getItem("todos"));
+  // }
+  // const Token = localStorage.getItem("token");
+
+  // const onDelete = (todo) => {
+  // console.log("I am onDelete", todo)
+  // let index = todos.indexOf(todos);
+  // todos.splice(index, 1);
+  //   setTodos(
+  //     todos.filter((e) => {
+  //       return e !== todo;
+  //     })
+  //   );
+  //   localStorage.setItem("todos", JSON.stringify(todos));
+  // };
 
   // const addTodo = (title, desc) => {
   // let sno;
@@ -48,47 +69,68 @@ function App() {
   //   setTodos([...todos, myTodo]);
   // };
 
-  const [todos, setTodos] = useState(initTodo);
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+  // const [token, setToken] = useState("");
+  // useEffect(() => {
+  //   localStorage.setItem("todos", JSON.stringify(todos));
+  // }, [todos]);
+
+  // useEffect(() => {}, [setToken]);
+  // axios.get("token").then(
+  //   (res) => {
+  //     token = res.data;
+  //   },
+  //   (err) => {
+  //     console.log(err);
+  //   }
+  // );
 
   // Deleting in this way doesn't work in react.
   // let index = todos.indexOf(todo);
   // todos.splice(index, 1);
+  render() {
+    return (
+      <>
+        <Router>
+          <Header
+          // user={this.state.user}
+          />
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => {
+                // if (this.state.user) {
+                // console.log(Token);
+                return (
+                  <>
+                    <AddTodo />
+                    <Todos />
+                  </>
+                );
+                // } else {
+                //   <h1>You are not logged in. </h1>;
+                // }
+              }}
+            ></Route>
+            <Route exact path="/about">
+              <About />
+            </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <Route exact path="/register">
+              <Register />
+            </Route>
+            <Route exact path="/logout">
+              <Register />
+            </Route>
+          </Switch>
 
-  return (
-    <>
-      <Router>
-        <Header />
-        <Switch>
-          <Route
-            exact
-            path="/"
-            render={() => {
-              return (
-                <>
-                  <AddTodo />
-                  <Todos todos={todos} onDelete={onDelete} />
-                </>
-              );
-            }}
-          ></Route>
-          <Route exact path="/about">
-            <About />
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/register">
-            <Register />
-          </Route>
-        </Switch>
-
-        <Footer />
-      </Router>
-    </>
-  );
+          <Footer />
+        </Router>
+      </>
+    );
+  }
 }
 
-export default App;
+// export default App;

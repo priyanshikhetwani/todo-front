@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export const getTodosAsync = createAsyncThunk(
   "todos/getTodosAsync",
@@ -61,19 +62,22 @@ export const toggleCompleteAsync = createAsyncThunk(
 export const deleteTodoAsync = createAsyncThunk(
   "todos/deleteTodosAsync",
   async (payload) => {
+    console.log(payload.id);
     console.log("inside deleteasync");
     const response = await fetch(`http://127.0.0.1:3333/todo/${payload.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify(),
+      body: JSON.stringify(null),
     });
 
     if (response.ok) {
       const todo = await response.json();
       console.log(todo.id);
       return { todo };
+    } else {
+      alert("You are not logged in");
     }
   }
 );
