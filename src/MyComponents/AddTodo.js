@@ -24,6 +24,7 @@ export const AddTodo = () => {
   };
   const styles = {
     width: "50%",
+    minWidth: "80vw",
   };
   const mystyle = {
     backgroundColor: "#FFFFE6",

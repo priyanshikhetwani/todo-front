@@ -30,6 +30,54 @@ export const addTodosAsync = createAsyncThunk(
   }
 );
 
+export const toggleCompleteAsync = createAsyncThunk(
+  "todos/completeTodosAsync",
+  async (payload) => {
+    console.log("patching update");
+    const response = await fetch(`http://127.0.0.1:3333/todo/${payload.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ completed: payload.completed }),
+    });
+
+    if (response.ok) {
+      console.log(response.json());
+      const todo = await response.json();
+      return { id: todo.id, completed: todo.completed };
+    }
+  }
+);
+
+// export const getTodosAsync = createAsyncThunk(
+//   "http://127.0.0.1:3333/todo",
+//   async (payload) => {
+//     const response = await userAPI.JSON;
+//     return response.data;
+//   }
+// );
+
+export const deleteTodoAsync = createAsyncThunk(
+  "todos/deleteTodosAsync",
+  async (payload) => {
+    console.log("inside deleteasync");
+    const response = await fetch(`http://127.0.0.1:3333/todo/${payload.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify(),
+    });
+
+    if (response.ok) {
+      const todo = await response.json();
+      console.log(todo.id);
+      return { todo };
+    }
+  }
+);
+
 const todoSlice = createSlice({
   name: "todos",
   initialState: [
@@ -79,6 +127,16 @@ const todoSlice = createSlice({
     },
     [addTodosAsync.fulfilled]: (state, action) => {
       state.push(action.payload.todo);
+    },
+    [toggleCompleteAsync.fulfilled]: (state, action) => {
+      const index = state.findIndex((todo) => todo.id === action.payload.id);
+
+      state[index].completed = action.payload.completed;
+    },
+    [deleteTodoAsync.fulfilled]: (state, action) => {
+      console.log("delete fulfilled");
+      // return action.payload.todos;
+      return state.filter((todo) => todo.id !== action.payload.id);
     },
   },
 });

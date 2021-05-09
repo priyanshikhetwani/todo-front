@@ -3,7 +3,7 @@ import { TodoItem } from "./TodoItem";
 import { useSelector, useDispatch } from "react-redux";
 import { getTodosAsync } from "../redux/todoSlice";
 
-export const Todos = (props) => {
+export const Todos = () => {
   const todos = useSelector((state) => state.todos);
   const dispatch = useDispatch();
 

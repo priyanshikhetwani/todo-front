@@ -5,6 +5,8 @@ import { Footer } from "./MyComponents/Footer";
 import { Todos } from "./MyComponents/Todos";
 import { AddTodo } from "./MyComponents/AddTodo";
 import { About } from "./MyComponents/About";
+import { Login } from "./MyComponents/Login";
+import { Register } from "./MyComponents/Register";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
@@ -74,6 +76,12 @@ function App() {
           ></Route>
           <Route exact path="/about">
             <About />
+          </Route>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+          <Route exact path="/register">
+            <Register />
           </Route>
         </Switch>
 
