@@ -90,10 +90,10 @@ export default function Header(props) {
                   className="nav-link"
                   onClick={() => {
                     localStorage.clear();
-                    <Redirect to="/" />;
+                    <Redirect to="/login" />;
                     alert("logging out");
                   }}
-                  to="/"
+                  to="/login"
                 >
                   Logout
                 </Link>
