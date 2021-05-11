@@ -6,7 +6,7 @@ export const AddTodo = () => {
   const [title, setTitle] = useState();
 
   const dispatch = useDispatch();
-  // const [desc, setDesc] = useState("");
+
   const submit = (e) => {
     e.preventDefault();
     console.log("dispatched");
@@ -18,8 +18,6 @@ export const AddTodo = () => {
           title: title,
         })
       );
-      //   setTitle("");
-      // setDesc("");
     }
   };
   const styles = {
@@ -47,10 +45,7 @@ export const AddTodo = () => {
             style={mystyle}
           />
         </div>
-        {/* <div className="mb-3" > */}
-        {/* <label for="formGroupExampleInput2" class="form-label">Another label</label> */}
-        {/* <input type="text" value={desc} onChange={(e)=>{setDesc(e.target.value)}} style={mystyle} className="form-control" id="desc" placeholder="Description" /> */}
-        {/* </div> */}
+
         <div className="mb-3">
           <button className="btn btn-success btn-sm">Add</button>
         </div>

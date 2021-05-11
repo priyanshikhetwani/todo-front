@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 export default function Header(props) {
   // let button;
@@ -35,7 +35,7 @@ export default function Header(props) {
   //     </ul>
   //   );
   // }
-
+  const Token = localStorage.getItem("token");
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -70,16 +70,35 @@ export default function Header(props) {
 
           <ul className="ml-auto"> */}
             {/* <div className="ml-auto"> */}
-            <li className="nav-item">
-              <Link className="nav-link" to="/login">
-                Login
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/register">
-                Register
-              </Link>
-            </li>
+
+            {!Token ? (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/register">
+                    Register
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  onClick={() => {
+                    localStorage.clear();
+                    <Redirect to="/" />;
+                    alert("logging out");
+                  }}
+                  to="/"
+                >
+                  Logout
+                </Link>
+              </li>
+            )}
             {/* </div> */}
           </ul>
           {/* {props.searchBar ?

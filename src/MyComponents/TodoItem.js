@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toggleCompleteAsync, deleteTodoAsync } from "../redux/todoSlice";
 
 export const TodoItem = ({ title, id, completed }) => {
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   dispatch(toggleCompleteAsync());
+  // }, [completed]);
+
   const handleCompleteClick = () => {
     dispatch(
       toggleCompleteAsync({
         id: id,
-        completed: !completed,
+        completed: !!completed,
       })
     );
   };
@@ -34,7 +38,7 @@ export const TodoItem = ({ title, id, completed }) => {
           <label for="completed" className="checkbox m-1">
             <input
               type="checkbox"
-              name="completed"
+              name="is_completed"
               checked={completed}
               onChange={handleCompleteClick}
             />
@@ -48,40 +52,5 @@ export const TodoItem = ({ title, id, completed }) => {
         </div>
       </div>
     </center>
-
-    // <>
-    // {((todo.sno%4)===0)?
-    // <div className="row">
-    //     <div className="card col-md-3 clearfix" style={myStyle}>
-    //     <div className="card-body">
-    //     <h5 className="card-title">{todo.title}</h5>
-    //      <p className="card-text">{todo.desc}</p>
-    //       <button className="btn btn-danger btn-sm" onClick={()=>{onDelete(todo)}}>Delete</button>
-    // </div>
-    // </div>
-    // <br/>
-    // </div>
-    //     :
-    // <>
-    // <span>
-    // <div className="card col-md-3 clearfix" style={myStyle}>
-    //     <div className="card-body">
-    //     <h5 className="card-title">{todo.title}</h5>
-    //      <p className="card-text">{todo.desc}</p>
-    //       <button className="btn btn-danger btn-sm" onClick={()=>{onDelete(todo)}}>Delete</button>
-    // </div>
-    // </div>
-    // <br/>
-    // </span>
-    // </>
-
-    // </>
   );
 };
-
-// <div className="mb-3">
-/* <h4>{todo.title}</h4>
-            <p>{todo.desc}</p>
-            <button className="btn btn-danger btn-sm" onClick={()=>{onDelete(todo)}}>Delete</button> */
-
-// </div>

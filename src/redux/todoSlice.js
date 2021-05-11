@@ -1,11 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { useHistory, Redirect } from "react-router-dom";
+// import 'bearer_token';
+
+const Token = "bearer " + localStorage.getItem("token");
 
 export const getTodosAsync = createAsyncThunk(
   "todos/getTodosAsync",
   async () => {
+    console.log(Token);
+    // console.log("bearer_token",bearer_token);
     console.log("in thunk");
-    const response = await fetch("http://127.0.0.1:3333/todo");
+    const response = await fetch("http://127.0.0.1:3333/api/todo", {
+      method: "GET",
+      headers: {
+        Authorization: Token,
+      },
+    });
     if (response.ok) {
       const todos = await response.json();
       return { todos };
@@ -16,15 +27,18 @@ export const getTodosAsync = createAsyncThunk(
 export const addTodosAsync = createAsyncThunk(
   "todos/addTodosAsync",
   async (payload) => {
-    const response = await fetch("http://127.0.0.1:3333/todo", {
+    const response = await fetch("http://127.0.0.1:3333/api/todo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: Token,
       },
       body: JSON.stringify({ title: payload.title }),
     });
 
     if (response.ok) {
+      console.log("posted");
+      alert("Added");
       const todo = await response.json();
       return { todo };
     }
@@ -34,43 +48,46 @@ export const addTodosAsync = createAsyncThunk(
 export const toggleCompleteAsync = createAsyncThunk(
   "todos/completeTodosAsync",
   async (payload) => {
+    console.log(payload);
     console.log("patching update");
-    const response = await fetch(`http://127.0.0.1:3333/todo/${payload.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ completed: payload.completed }),
-    });
+    const response = await fetch(
+      `http://127.0.0.1:3333/api/todo/${payload.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: Token,
+        },
+        body: JSON.stringify({ completed: payload.completed }),
+      }
+    );
 
     if (response.ok) {
-      console.log(response.json());
+      console.log("ok update");
+      // console.log(response.json());
       const todo = await response.json();
+      console.log(todo);
       return { id: todo.id, completed: todo.completed };
     }
   }
 );
-
-// export const getTodosAsync = createAsyncThunk(
-//   "http://127.0.0.1:3333/todo",
-//   async (payload) => {
-//     const response = await userAPI.JSON;
-//     return response.data;
-//   }
-// );
 
 export const deleteTodoAsync = createAsyncThunk(
   "todos/deleteTodosAsync",
   async (payload) => {
     console.log(payload.id);
     console.log("inside deleteasync");
-    const response = await fetch(`http://127.0.0.1:3333/todo/${payload.id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(null),
-    });
+    const response = await fetch(
+      `http://127.0.0.1:3333/api/todo/${payload.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: Token,
+        },
+        body: JSON.stringify({ id: payload.id }),
+      }
+    );
 
     if (response.ok) {
       const todo = await response.json();
@@ -131,16 +148,22 @@ const todoSlice = createSlice({
     },
     [addTodosAsync.fulfilled]: (state, action) => {
       state.push(action.payload.todo);
+      <Redirect to="/" />;
     },
     [toggleCompleteAsync.fulfilled]: (state, action) => {
+      console.log("fulfilled");
       const index = state.findIndex((todo) => todo.id === action.payload.id);
-
       state[index].completed = action.payload.completed;
+      console.log(state[index]);
     },
     [deleteTodoAsync.fulfilled]: (state, action) => {
+      // const history = useHistory();
       console.log("delete fulfilled");
       // return action.payload.todos;
       return state.filter((todo) => todo.id !== action.payload.id);
+      alert("Successfully Deleted");
+      // <Redirect to="/"/>
+      // history.push("/")
     },
   },
 });

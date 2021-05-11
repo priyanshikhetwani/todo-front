@@ -24,7 +24,7 @@ export const Register = () => {
     console.warn(data);
 
     axios
-      .post("register", data)
+      .post("http://127.0.0.1:3333/api/register", data)
       .then((res) => {
         console.log(res);
         history.push("/login");

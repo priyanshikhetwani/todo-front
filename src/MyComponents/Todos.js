@@ -9,7 +9,7 @@ export const Todos = () => {
 
   useEffect(() => {
     dispatch(getTodosAsync());
-  }, [dispatch]);
+  }, [todos]);
 
   let todostyles = {
     minHeight: "85vh",
@@ -23,12 +23,9 @@ export const Todos = () => {
         todos.map((todo) => {
           return (
             <TodoItem
-              //   todo={todo}
               title={todo.title}
               completed={todo.completed}
               id={todo.id}
-              //   key={todo.id}
-              // onDelete={props.onDelete}
             />
           );
         })
