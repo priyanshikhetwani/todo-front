@@ -1,25 +1,6 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTodosAsync } from "../redux/todoSlice";
+import React from "react";
 
-export const AddTodo = () => {
-  const [title, setTitle] = useState();
-
-  const dispatch = useDispatch();
-
-  const submit = (e) => {
-    e.preventDefault();
-    console.log("dispatched");
-    if (!title) {
-      alert("Title can not be blank.");
-    } else {
-      dispatch(
-        addTodosAsync({
-          title: title,
-        })
-      );
-    }
-  };
+export const AddTodo = ({ value, setValue, handleSubmit }) => {
   const styles = {
     width: "50%",
     minWidth: "80vw",
@@ -27,18 +8,16 @@ export const AddTodo = () => {
   const mystyle = {
     backgroundColor: "#FFFFE6",
   };
+
   return (
     <div className="container mt-3 mb-3" style={styles}>
       <h3 className="text-center">Add Todo's</h3>
-      <form onSubmit={submit} className="form-inline">
+      <form onSubmit={handleSubmit} className="form-inline">
         <div className="mb-3">
-          {/* <label for="formGroupExampleInput" class="form-label">Example label</label> */}
           <input
             type="text"
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
             className="form-control"
             id="title"
             placeholder="Title"

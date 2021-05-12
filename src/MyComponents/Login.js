@@ -1,60 +1,56 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Redirect, useHistory } from "react-router-dom";
-import { baseURL } from "../index";
+import { useDispatch } from "react-redux";
+import { Link, Redirect, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 let myStyles = {
   width: "100%",
-  // padding: "10px 20px",
+
   alignContent: "center",
-  // margin: "20px 50px",
+
   justifyContent: "center",
-  minHeight: "85vh",
+  minHeight: "100vh",
   textAlign: "center",
   alignItems: "center",
 };
 
-export const Login = (e) => {
+export const Login = ({ history }) => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [token, setToken] = useState("");
 
-  const history = useHistory();
-  // useEffect(() => {
-  //   if (localStorage.getItem("user-info")) {
-  //     history.push("/");
-  //   }
-  // }, []);
+  const loginFn = async (email, password) => {
+    const res = await axios.post(`${process.env.REACT_APP_API}/api/login`, {
+      email,
+      password,
+    });
+    return res;
+  };
 
-  async function login(e) {
+  const login = async (e) => {
     e.preventDefault();
-    console.log("login");
-    // console.log(email, password);
-    let data = { email, password };
-    console.log(data);
-    axios
-      .post("http://127.0.0.1:3333/api/login", data)
+    const val = await loginFn(email, password)
       .then((res) => {
-        console.log(res);
-
-        console.log("logged", loggedIn);
-
-        localStorage.setItem("token", res.data.token);
-
-        history.push("/");
-        alert("Logging in");
-        console.log(res);
+        localStorage.setItem("email", email);
+        localStorage.setItem("token", res.data.type + " " + res.data.token);
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: {
+            email: email,
+            token: res.data.type + " " + res.data.token,
+          },
+        });
+        toast.success("Welcome!");
+        history.push("/home");
       })
       .catch((err) => {
-        alert("Can't find your credentials");
+        toast.error("Incorrect Username or Password");
         console.log(err);
+        history.push("/");
       });
-  }
+  };
 
-  if (loggedIn) {
-    return <Redirect to="/" />;
-  }
   return (
     <div className="d-flex  justify-content-center" style={myStyles}>
       <div className="w-100 m-2" style={{ minWidth: "40vw" }}>
@@ -82,14 +78,15 @@ export const Login = (e) => {
             required
           ></input>
           <br />
-          <button
-            class="btn btn-lg btn-dark btn-block"
-            type="submit"
-            // onClick={login}
-          >
+          <button class="btn btn-lg btn-dark btn-block" type="submit">
             Log in
           </button>
         </form>
+        <div className="m-1">Do not have an account? </div>
+
+        <Link className="clr btn-primary btn m-2" to="/register">
+          <i>Register here</i>
+        </Link>
       </div>
     </div>
   );

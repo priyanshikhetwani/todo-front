@@ -1,93 +1,42 @@
-import "./App.css";
-import React, { useState, useEffect, Component } from "react";
-import Header from "./MyComponents/Header";
-import { Footer } from "./MyComponents/Footer";
-import { Todos } from "./MyComponents/Todos";
-import { AddTodo } from "./MyComponents/AddTodo";
-import { About } from "./MyComponents/About";
+import React, { useEffect } from "react";
+import { Switch, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
 import { Login } from "./MyComponents/Login";
-// import {Logout} from "./MyComponents/Logout"
 import { Register } from "./MyComponents/Register";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-// import axios from "axios";
+import { Home } from "./Home";
 
-export default class App extends Component {
-  state = {
-    loggedIn: false,
-    // user: "",
-  };
+function App() {
+  const dispatch = useDispatch();
 
-  componentDidMount() {
-    if (localStorage.getItem("token")) {
-      this.setState({
-        loggedIn: true,
-      });
-    }
-  }
-
-  logOut() {}
-
-  // componentDidMount() {
-  //   axios.get("user").then(
-  //     (res) => {
-  //       console.log("token passed");
-  //       this.setState({
-  //         user: res.data,
-  //       });
-  //     },
-  //     (err) => {
-  //       console.log(err);
-  //     }
-  //   );
-  // }
-
-  render() {
-    return (
-      <>
-        <Router>
-          <Header />
-          <Switch>
-            <Route
-              exact
-              path="/"
-              render={() => {
-                if (this.state.loggedIn) {
-                  console.log(this.state.loggedIn);
-                  return (
-                    <>
-                      <AddTodo />
-                      <Todos />
-                    </>
-                  );
-                } else {
-                  return (
-                    <h1
-                      style={{
-                        minHeight: "85vh",
-                        textAlign: "center",
-                        marginTop: "20px",
-                      }}
-                    >
-                      You are not logged in.
-                    </h1>
-                  );
-                }
-              }}
-            ></Route>
-            <Route exact path="/about">
-              <About />
-            </Route>
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Route exact path="/register">
-              <Register />
-            </Route>
-          </Switch>
-
-          <Footer />
-        </Router>
-      </>
-    );
-  }
+  useEffect(() => {
+    const user = () => {
+      if (localStorage.getItem("email") && localStorage.getItem("token")) {
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("email");
+        console.log("email in app", email);
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: {
+            email: email,
+            token: token,
+          },
+        });
+      }
+    };
+    return () => user();
+  }, [dispatch]);
+  return (
+    <>
+      <ToastContainer />
+      <Switch>
+        <Route exact path="/home" component={Home} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/" component={Login} />
+      </Switch>
+    </>
+  );
 }
+
+export default App;
