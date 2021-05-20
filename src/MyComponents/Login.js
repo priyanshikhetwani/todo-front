@@ -16,7 +16,7 @@ let myStyles = {
 };
 
 export const Login = ({ history }) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -34,13 +34,13 @@ export const Login = ({ history }) => {
       .then((res) => {
         localStorage.setItem("email", email);
         localStorage.setItem("token", res.data.type + " " + res.data.token);
-        dispatch({
-          type: "LOGGED_IN_USER",
-          payload: {
-            email: email,
-            token: res.data.type + " " + res.data.token,
-          },
-        });
+        // dispatch({
+        //   type: "LOGGED_IN_USER",
+        //   payload: {
+        //     email: email,
+        //     token: res.data.type + " " + res.data.token,
+        //   },
+        // });
         toast.success("Welcome!");
         history.push("/home");
       })

@@ -8,7 +8,7 @@ import { Register } from "./MyComponents/Register";
 import { Home } from "./Home";
 
 function App() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     const user = () => {
@@ -16,17 +16,17 @@ function App() {
         const token = localStorage.getItem("token");
         const email = localStorage.getItem("email");
         console.log("email in app", email);
-        dispatch({
-          type: "LOGGED_IN_USER",
-          payload: {
-            email: email,
-            token: token,
-          },
-        });
+        // dispatch({
+        //   type: "LOGGED_IN_USER",
+        //   payload: {
+        //     email: email,
+        //     token: token,
+        //   },
+        // });
       }
     };
     return () => user();
-  }, [dispatch]);
+  });
   return (
     <>
       <ToastContainer />

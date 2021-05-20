@@ -14,7 +14,7 @@ export const Home = () => {
   const [value, setValue] = useState("");
   const history = useHistory();
   const token = localStorage.getItem("token");
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   // Logout
   const logout = async (authtoken) => {
@@ -37,10 +37,10 @@ export const Home = () => {
         if (res.data) {
           localStorage.removeItem("email");
           localStorage.removeItem("token");
-          dispatch({
-            type: "LOGOUT",
-            payload: null,
-          });
+          // dispatch({
+          //   type: "LOGOUT",
+          //   payload: null,
+          // });
           toast.success("Logged out successfully");
           history.push("/");
         }
@@ -123,6 +123,7 @@ export const Home = () => {
     const val = async () => {
       await list(token)
         .then((res) => {
+          // console.log(token);
           const vall = res.data;
           const arr = [];
           vall.map((v) => {

@@ -8,7 +8,7 @@ export const Register = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password_confirmation, setConfirmPassword] = useState("");
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const register = async (email, password, password_confirmation) => {
     const res = await axios.post(`${process.env.REACT_APP_API}/api/register`, {
@@ -26,13 +26,13 @@ export const Register = ({ history }) => {
       const res = await register(email, password, password_confirmation);
       localStorage.setItem("email", email);
       localStorage.setItem("token", res.data);
-      dispatch({
-        type: "LOGGED_IN_USER",
-        payload: {
-          email: email,
-          token: res.data,
-        },
-      });
+      // dispatch({
+      //   type: "LOGGED_IN_USER",
+      //   payload: {
+      //     email: email,
+      //     token: res.data,
+      //   },
+      // });
       toast.success("Registered Successfully!");
       history.push("/home");
     } catch (err) {

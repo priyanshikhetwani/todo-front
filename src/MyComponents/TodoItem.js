@@ -105,19 +105,29 @@ export const TodoItem = ({ todos, handleDelete }) => {
                   <div className="d-flex justify-content-between align-items-center">
                     <label for="completed" className="checkbox m-1">
                       {list.is_completed == 0 ? (
-                        <button
-                          className="btn btn-success btn-sm "
-                          onClick={(e) => handleCheckBox(list.id)}
-                        >
-                          Done
-                        </button>
+                        <input
+                          type="checkbox"
+                          checked=""
+                          onChange={(e) => handleCheckBox(list.id)}
+                        />
                       ) : (
-                        <button
-                          className="btn btn-dark btn-sm"
-                          onClick={(e) => handleCheckBoxundo(list.id)}
-                        >
-                          UNDO
-                        </button>
+                        //   <button
+                        //     className="btn btn-success btn-sm "
+                        //     onClick={(e) => handleCheckBox(list.id)}
+                        //   >
+                        //     Done
+                        //   </button>
+                        <input
+                          type="checkbox"
+                          checked="checked"
+                          onChange={(e) => handleCheckBoxundo(list.id)}
+                        />
+                        //   <button
+                        //     className="btn btn-dark btn-sm"
+                        //     onClick={(e) => handleCheckBoxundo(list.id)}
+                        //   >
+                        //     UNDO
+                        //   </button>
                       )}
                     </label>
                     <h5 className="title m-1">{list.title}</h5>
