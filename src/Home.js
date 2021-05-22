@@ -1,35 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { AddTodo } from "./MyComponents/AddTodo";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect, Suspense, lazy } from "react";
+import AddTodo from "./MyComponents/AddTodo";
 import Header from "./MyComponents/Header";
 import { useHistory } from "react-router";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { TodoItem } from "./MyComponents/TodoItem";
-import { Footer } from "./MyComponents/Footer";
+import { addToList, deleteFromList, getList, logout } from "./actions";
 
-export const Home = () => {
+const TodoItem = lazy(() => import("./MyComponents/TodoItem"));
+const Home = () => {
   const [todos, setTodos] = useState([]);
   const [value, setValue] = useState("");
   const history = useHistory();
   const token = localStorage.getItem("token");
-  // const dispatch = useDispatch();
 
   // Logout
-  const logout = async (authtoken) => {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API}/api/logout`,
-      {},
-      {
-        headers: {
-          Authorization: authtoken,
-        },
-      }
-    );
-    return res;
-  };
-
   const handleLogout = async (e) => {
     e.preventDefault();
     await logout(token)
@@ -37,10 +21,6 @@ export const Home = () => {
         if (res.data) {
           localStorage.removeItem("email");
           localStorage.removeItem("token");
-          // dispatch({
-          //   type: "LOGOUT",
-          //   payload: null,
-          // });
           toast.success("Logged out successfully");
           history.push("/");
         }
@@ -49,19 +29,6 @@ export const Home = () => {
         toast.error("An error occured");
         console.log(err);
       });
-  };
-
-  const list = async (authtoken) => {
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_API}/api/todo`, {
-        headers: {
-          Authorization: authtoken,
-        },
-      });
-      return res;
-    } catch {
-      return console.log("Cannot get the list");
-    }
   };
 
   //Add todo
@@ -77,76 +44,41 @@ export const Home = () => {
       });
   };
 
-  const addToList = async (authtoken, title) => {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API}/api/todo`,
-      { title },
-      {
-        headers: {
-          Authorization: authtoken,
-        },
-      }
-    );
-    return res;
-  };
-
   //Delete todo
   const handleDelete = async (id) => {
     console.log("inside handle delete");
-    await deleteList(token, id)
+    await deleteFromList(token, id)
       .then((res) => {
-        toast.success("Task deleted");
+        alert.show("Deleted");
+        // toast.success("Task deleted");
       })
       .catch((err) => {
         toast.error("Couldn't delete task");
       });
   };
 
-  const deleteList = async (authtoken, id) => {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API}/api/delete`,
-      { id },
-      {
-        headers: {
-          Authorization: authtoken,
-        },
-      }
-    );
-    return res;
-  };
-
   let todostyles = {
     minHeight: "100vh",
   };
 
-  useEffect(() => {
-    const val = async () => {
-      await list(token)
-        .then((res) => {
-          // console.log(token);
-          const vall = res.data;
-          const arr = [];
-          vall.map((v) => {
-            arr.push({
-              id: v.id,
-              user_id: v.user_id,
-              title: v.title,
-              is_completed: v.is_completed,
-            });
-          });
-          if (arr) {
-            setTodos([...arr]);
-          }
-        })
-        .catch((err) => {
-          console.log("list err", err);
+  const getTodos = async () => {
+    await getList(token)
+      .then((res) => {
+        const todolist = res.data;
+        let newarr = [];
+        todolist.map((todo) => {
+          newarr = [...newarr, todo];
         });
-    };
-    val();
-  }, [handleSubmit]);
+        setTodos(newarr);
+      })
+      .catch((error) => {
+        console.log("Can't get todos");
+      });
+  };
+
   useEffect(() => {
-    console.log("todo list", todos);
-  }, [todos]);
+    getTodos();
+  }, [handleSubmit]);
 
   return (
     <div>
@@ -159,8 +91,9 @@ export const Home = () => {
               value={value}
               setValue={setValue}
             />
-            <TodoItem todos={todos} handleDelete={handleDelete} />
-            {/* <Footer /> */}
+            <Suspense fallback={<h1>Loading . . . </h1>}>
+              <TodoItem todos={todos} handleDelete={handleDelete} />
+            </Suspense>
           </div>
         </>
       ) : (
@@ -172,3 +105,5 @@ export const Home = () => {
     </div>
   );
 };
+
+export default Home;

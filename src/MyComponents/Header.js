@@ -1,6 +1,6 @@
 import React from "react";
 
-function Header({ handleLogout }) {
+const Header = ({ handleLogout }) => {
   // let styles = {
   //   display: "inline-block",
   //   position: "relative",
@@ -18,6 +18,6 @@ function Header({ handleLogout }) {
       </span>
     </div>
   );
-}
+};
 
 export default Header;

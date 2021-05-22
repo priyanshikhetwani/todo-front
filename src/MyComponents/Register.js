@@ -1,23 +1,12 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { register } from "../actions";
 
-export const Register = ({ history }) => {
+const Register = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password_confirmation, setConfirmPassword] = useState("");
-  // const dispatch = useDispatch();
-
-  const register = async (email, password, password_confirmation) => {
-    const res = await axios.post(`${process.env.REACT_APP_API}/api/register`, {
-      email,
-      password,
-      password_confirmation,
-    });
-    return res;
-  };
 
   //register
   const signUp = async (e) => {
@@ -26,13 +15,6 @@ export const Register = ({ history }) => {
       const res = await register(email, password, password_confirmation);
       localStorage.setItem("email", email);
       localStorage.setItem("token", res.data);
-      // dispatch({
-      //   type: "LOGGED_IN_USER",
-      //   payload: {
-      //     email: email,
-      //     token: res.data,
-      //   },
-      // });
       toast.success("Registered Successfully!");
       history.push("/home");
     } catch (err) {
@@ -109,3 +91,5 @@ export const Register = ({ history }) => {
     </>
   );
 };
+
+export default Register;

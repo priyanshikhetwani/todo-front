@@ -1,8 +1,7 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { loginFn } from "../actions";
 
 let myStyles = {
   width: "100%",
@@ -15,32 +14,16 @@ let myStyles = {
   alignItems: "center",
 };
 
-export const Login = ({ history }) => {
-  // const dispatch = useDispatch();
+const Login = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const loginFn = async (email, password) => {
-    const res = await axios.post(`${process.env.REACT_APP_API}/api/login`, {
-      email,
-      password,
-    });
-    return res;
-  };
-
   const login = async (e) => {
     e.preventDefault();
-    const val = await loginFn(email, password)
+    const details = await loginFn(email, password)
       .then((res) => {
         localStorage.setItem("email", email);
         localStorage.setItem("token", res.data.type + " " + res.data.token);
-        // dispatch({
-        //   type: "LOGGED_IN_USER",
-        //   payload: {
-        //     email: email,
-        //     token: res.data.type + " " + res.data.token,
-        //   },
-        // });
         toast.success("Welcome!");
         history.push("/home");
       })
@@ -91,3 +74,5 @@ export const Login = ({ history }) => {
     </div>
   );
 };
+
+export default Login;

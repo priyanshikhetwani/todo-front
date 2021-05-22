@@ -1,6 +1,6 @@
 import React from "react";
 
-export const AddTodo = ({ value, setValue, handleSubmit }) => {
+const AddTodo = ({ value, setValue, handleSubmit }) => {
   const styles = {
     width: "50%",
     minWidth: "80vw",
@@ -32,3 +32,5 @@ export const AddTodo = ({ value, setValue, handleSubmit }) => {
     </div>
   );
 };
+
+export default AddTodo;
